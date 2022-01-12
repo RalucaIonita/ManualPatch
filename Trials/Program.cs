@@ -1,8 +1,8 @@
-﻿using System;
+﻿using PatchLibrary.Stuff;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Trials.Entities;
-using Trials.Stuff;
 
 namespace Trials
 {
@@ -15,15 +15,21 @@ namespace Trials
             var types = project.GetAllTypesSimple();
             var typesFull = project.GetAllTypesForGeneric();
 
-            var routes = new List<string>();
+            var routes = new List<RouteWithType>();
+
+            //var type = project.GetTypeFromRoute("/regions/");
 
 
-            project.GetType().GetAllTypesWithSubObjects(ref routes, "");
+            project.GetType().GetTypeFromRoute(ref routes, "", "/regions/");
 
             for (var i = 0; i < routes.Count(); i++)
             {
-                Console.WriteLine(routes[i]);
+                Console.WriteLine(routes[i].Type.Name + " " + routes[i].Route);
             }
+
+            //var 
+
+            //Console.WriteLine($"Type: {type.Name}");
 
             Console.WriteLine("Hello World!");
         }

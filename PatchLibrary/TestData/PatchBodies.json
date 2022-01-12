@@ -1,0 +1,48 @@
+﻿[
+	//should work
+	{
+		"operations": [
+			{
+				"operation": "replace",
+				"path": "/name",
+				"value": "Ceva frumix",
+			},
+			{
+				"operation": "remove",
+				"path": "/types",
+				"value": "1"
+			},
+			{
+				"operation": "add",
+				"path": "/geographies",
+				"value": {
+					"name": "ceva now"
+				}
+			},
+			{
+				"operation": "replace",
+				"path": "/geographies/1/name",
+				"value": "altceva"
+			}
+		]
+	},
+
+	//should fail
+	{
+		"operations": [
+			{
+				"operation": "replace",
+				"path": "/id",
+				"value": 5 //should not edit id
+			},
+			{
+				"operation": "add",
+				"path": "/geographies",
+				"value": {
+					"id":  11, //id not good
+					"name": "ceva now"
+				}
+			}
+		]
+	}
+]
