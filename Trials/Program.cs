@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Trials.Entities;
 using Trials.Stuff;
@@ -14,9 +15,15 @@ namespace Trials
             var types = project.GetAllTypesSimple();
             var typesFull = project.GetAllTypesForGeneric();
 
-            for (var i = 0; i < types.Count(); i++)
+            var routes = new List<string>();
+
+            project.GetType().GetAllTypesWithSubObjects(ref routes, "");
+
+            for (var i = 0; i < routes.Count(); i++)
             {
-                Console.WriteLine(types[i] + " " + typesFull[i]+ " " + fields[i]);
+                //Console.WriteLine(types[i] + " " + typesFull[i]+ " " + fields[i]);
+                Console.WriteLine(routes[i]);
+
             }
 
             Console.WriteLine("Hello World!");

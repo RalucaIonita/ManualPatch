@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using Trials.Entities;
 
 namespace Trials.Stuff
 {
@@ -39,7 +41,6 @@ namespace Trials.Stuff
         {
             var typeNames = new List<string>();
             var type = typeof(T);
-            var fields = type.GetFields();
             var properties = type.GetProperties().Select(x => x.PropertyType).ToList();
 
             foreach(var property in properties)
@@ -56,6 +57,49 @@ namespace Trials.Stuff
             }
             return typeNames;
         }
+
+        public static void GetAllTypesWithSubObjects(this Type type, ref List<string> routes, string root)
+        {
+            if (!type.IsClass && !type.IsEnum)
+                return;
+
+            var propertiesWithFieldNames = type.GetProperties().Select(x => new TypeWithFieldName(x.PropertyType, x.Name)).ToList();
+
+            foreach(var propertyWithFieldName in propertiesWithFieldNames)
+            {
+                if (propertyWithFieldName.Type == typeof(string) || !propertyWithFieldName.Type.IsClass)
+                {
+                    var newRoute = root + char.ToLower(propertyWithFieldName.FieldName[0]).ToString() + propertyWithFieldName.FieldName.Substring(1);
+                    routes.Add(newRoute);
+                }
+                else
+                {
+                    //Console.WriteLine($"{propertyWithFieldName.Type.Name}");
+
+                    if (propertyWithFieldName.Type.GenericTypeArguments.Count() != 0)
+                    {
+                        var subObjType = propertyWithFieldName.Type.GenericTypeArguments.First();
+
+                        propertyWithFieldName.Type = subObjType;
+                        subObjType.GetAllTypesWithSubObjects(ref routes, propertyWithFieldName.FieldName);
+                    }
+
+                    
+                }
+            }
+        }
+
+        public static bool HasOnlyBasicFields<T>(this T payload)
+        {
+            var type = typeof(T);
+            var propertiesTypes = type.GetProperties().Select(x => x.PropertyType);
+            var propertiesTypesClasses = propertiesTypes.Where(x => x != typeof(string) || x.IsClass).Count();
+
+            return propertiesTypesClasses == propertiesTypes.Count();
+
+        }
+
+
 
     }
 }
