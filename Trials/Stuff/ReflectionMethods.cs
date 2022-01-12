@@ -23,42 +23,39 @@ namespace Trials.Stuff
             return fieldNames;
         }
 
-        public static List<string> GetAllTypes<T>(this T payload)
+        public static List<string> GetAllTypesSimple<T>(this T payload)
         {
             var fieldNames = new List<string>();
             var type = typeof(T);
             var fields = type.GetFields();
 
-            var fieldTypes = type.GetProperties().Select(x => x.PropertyType.Name).ToList();
+            var fieldTypes = type.GetProperties().Select(x => x.PropertyType.Name.ToLower()).ToList();
 
             return fieldTypes;
         }
 
-        //public static List<string> GetAllFieldsWithSubobjects<T>(this T payload)
-        //{
-        //    var fieldNames = new List<string>();
-        //    var type = typeof(T);
-        //    var fields = type.GetFields();
 
-            
+        public static List<string> GetAllTypesForGeneric<T>(this T payload)
+        {
+            var typeNames = new List<string>();
+            var type = typeof(T);
+            var fields = type.GetFields();
+            var properties = type.GetProperties().Select(x => x.PropertyType).ToList();
 
-        //    foreach(var fieldType in fieldTypes)
-        //    {
-        //        if (fieldType.Name)
-        //    }
-            
+            foreach(var property in properties)
+            {
+                var name = property.Name;
 
+                if(property.GenericTypeArguments.Count() != 0)
+                {
+                    var subObjType = property.GenericTypeArguments.First().Name;
 
-        //}
-
-
-
-
-        //public static List<string> GetAllFields<T>(this T payload)
-        //{
-
-        //}
-
+                    name = name.Replace("`1", "") + "<" + subObjType + ">";
+                }
+                typeNames.Add(name);
+            }
+            return typeNames;
+        }
 
     }
 }
