@@ -17,13 +17,12 @@ namespace Trials
 
             var routes = new List<string>();
 
+
             project.GetType().GetAllTypesWithSubObjects(ref routes, "");
 
             for (var i = 0; i < routes.Count(); i++)
             {
-                //Console.WriteLine(types[i] + " " + typesFull[i]+ " " + fields[i]);
                 Console.WriteLine(routes[i]);
-
             }
 
             Console.WriteLine("Hello World!");

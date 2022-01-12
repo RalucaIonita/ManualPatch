@@ -63,13 +63,15 @@ namespace Trials.Stuff
             if (!type.IsClass && !type.IsEnum)
                 return;
 
-            var propertiesWithFieldNames = type.GetProperties().Select(x => new TypeWithFieldName(x.PropertyType, x.Name)).ToList();
+            var propertiesWithFieldNames = type.GetProperties().Select(x => new TypeWithFieldName(x.PropertyType, x.Name, root)).ToList();
 
             foreach(var propertyWithFieldName in propertiesWithFieldNames)
             {
                 if (propertyWithFieldName.Type == typeof(string) || !propertyWithFieldName.Type.IsClass)
                 {
-                    var newRoute = root + char.ToLower(propertyWithFieldName.FieldName[0]).ToString() + propertyWithFieldName.FieldName.Substring(1);
+                    var newRoute = 
+                        //root + 
+                        char.ToLower(propertyWithFieldName.FieldName[0]).ToString() + propertyWithFieldName.FieldName.Substring(1);
                     routes.Add(newRoute);
                 }
                 else
@@ -81,17 +83,14 @@ namespace Trials.Stuff
                         var subObjType = propertyWithFieldName.Type.GenericTypeArguments.First();
 
                         propertyWithFieldName.Type = subObjType;
-                        subObjType.GetAllTypesWithSubObjects(ref routes, propertyWithFieldName.FieldName);
                     }
-
-                    
+                    propertyWithFieldName.Type.GetAllTypesWithSubObjects(ref routes, propertyWithFieldName.FieldName);
                 }
             }
         }
 
-        public static bool HasOnlyBasicFields<T>(this T payload)
+        public static bool HasOnlyBasicFields(this Type type)
         {
-            var type = typeof(T);
             var propertiesTypes = type.GetProperties().Select(x => x.PropertyType);
             var propertiesTypesClasses = propertiesTypes.Where(x => x != typeof(string) || x.IsClass).Count();
 

@@ -7,10 +7,10 @@ namespace Trials.Entities
         public Type Type { get; set; }
         public string FieldName { get; set; }
 
-        public TypeWithFieldName(Type type, string fieldName)
+        public TypeWithFieldName(Type type, string fieldName, string root)
         {
             Type = type;
-            FieldName = "/" + char.ToLower(fieldName[0]).ToString() + fieldName.Substring(1); ;
+            FieldName = root + "/" + char.ToLower(fieldName[0]).ToString() + fieldName.Substring(1); ;
         }
     }
 }
